@@ -1,1 +1,4 @@
-token: 123456ABCDEF
+subdomain: mysubdomain
+username: email@example.com
+password: password
+user_id your_user_id
