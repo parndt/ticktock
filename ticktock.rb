@@ -16,9 +16,15 @@ class TickTock
     harvest.reports.time_by_user user_id, from, to
   end
 
+  def hours_output_file
+    File.expand_path('../.hours', __FILE__)
+  end
+
   def semimonthly_hours!(user_id = @config[:user_id])
     entries = report! user_id, *current_semimonthly_period
-    entries.map { |entry| entry.hours.to_f }.sum
+    File.open(hours_output_file, 'w+') { |file|
+      file.write(entries.map { |entry| entry.hours.to_f }.sum)
+    }
   end
 
   def harvest
@@ -44,3 +50,5 @@ class TickTock
   end
 
 end
+
+TickTock.new.semimonthly_hours!
