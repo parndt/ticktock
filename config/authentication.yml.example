@@ -1,4 +1,4 @@
 subdomain: mysubdomain
 username: email@example.com
 password: password
-user_id your_user_id
+user_id: your_user_id
