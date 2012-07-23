@@ -1,4 +1,5 @@
 require 'bundler/setup'
+require 'pathname'
 require 'harvested'
 
 class TickTock
