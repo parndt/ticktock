@@ -24,7 +24,7 @@ I have the following in my `~/.bash_profile`:
 
 ```bash
 parse_hours() {
-  [ -e /code/parndt/ticktock/.hours ] && cat /code/parndt/ticktock/.hours
+  [ -e /path/to/ticktock/.hours ] && cat /path/to/ticktock/.hours
 }
 set_ps1() {
   # ... Lots of other things here that aren't relevant ...
@@ -40,7 +40,7 @@ This works in conjunction with a script used by crontab at `~/bin/tick`:
 
 ```bash
 #!/bin/sh
-source /Users/parndt/.rvm/scripts/rvm
+source /path/to/.rvm/scripts/rvm
 cd /path/to/ticktock
 ruby ticktock.rb
 
