@@ -18,5 +18,40 @@ Next, run it:
 This will output to a file inside the directory called `.hours` with a float
 value representing how many hours for that user.
 
-I set up a crontab task to poll this ruby file every 30 minutes so that I had
-the current value and then I added it to my `~/.bash_profile` PS1.
+# Automate it!
+
+I have the following in my `~/.bash_profile`:
+
+```bash
+parse_hours() {
+  [ -e /code/parndt/ticktock/.hours ] && cat /code/parndt/ticktock/.hours
+}
+set_ps1() {
+  # ... Lots of other things here that aren't relevant ...
+  
+  local hours=`parse_hours`
+  PS1="[$hours] \t:"
+}
+
+PROMPT_COMMAND += 'set_ps1;'
+```
+
+This works in conjunction with a script used by crontab at `~/bin/tick`:
+
+```bash
+#!/bin/sh
+source /Users/parndt/.rvm/scripts/rvm
+cd /path/to/ticktock
+ruby ticktock.rb
+
+```
+
+I have this installed to crontab using:
+
+```bash
+*/30 * * * * /bin/bash -c '. $HOME/.bashrc && ~/bin/tick'
+```
+
+So, every 30 minutes I get an update on my terminal like magic.
+This relies on you having run `bundle install` inside your default
+Ruby (in my case using rvm) so that all the required gems are available.
