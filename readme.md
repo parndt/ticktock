@@ -29,7 +29,7 @@ parse_hours() {
 set_ps1() {
   # ... Lots of other things here that aren't relevant ...
   
-  local hours=`parse_hours`
+  local hours=`printf "%.2f" $(parse_hours)`
   PS1="[$hours] \t:"
 }
 
