@@ -2,7 +2,8 @@
 
 This is the little API consumer that could for the time tracker [Harvest](http://getharvest.com).
 All this does is connects to Harvest and finds out how many hours a user has
-logged for the current semi-monthly period.
+logged for the current semi-monthly period. Alternatively, you can see how many
+hours the user has logged in the past year that remain uninvoiced.
 
 # How?
 
@@ -11,9 +12,13 @@ exist, just create it first based on `config/authentication.yml.example`. Note
 that you must put your `user_id` which you can find inside the querystring
 of most Harvest requests when using their website.
 
-Next, run it:
+Next, run it with either uninvoiced support:
 
-    ruby ticktock.rb
+    UNINVOICED=true ruby ticktock.rb
+
+Or with semi-monthly support:
+
+    SEMIMONTHLY=true ruby ticktock.rb
 
 This will output to a file inside the directory called `.hours` with a float
 value representing how many hours for that user.
@@ -28,7 +33,7 @@ parse_hours() {
 }
 set_ps1() {
   # ... Lots of other things here that aren't relevant ...
-  
+
   local hours=`printf "%.2f" $(parse_hours)`
   PS1="[$hours] \t:"
 }
@@ -49,7 +54,13 @@ ruby ticktock.rb
 I have this installed to crontab using:
 
 ```bash
-*/30 * * * * /bin/bash -c '. $HOME/.bashrc && ~/bin/tick'
+*/30 * * * * /bin/bash -c '. $HOME/.bashrc && UNINVOICED=true ~/bin/tick'
+```
+
+Or for semi-monthly support:
+
+```bash
+*/30 * * * * /bin/bash -c '. $HOME/.bashrc && SEMIMONTHLY=true ~/bin/tick'
 ```
 
 So, every 30 minutes I get an update on my terminal like magic.

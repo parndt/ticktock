@@ -16,15 +16,30 @@ class TickTock
     harvest.reports.time_by_user user_id, from, to
   end
 
+  def unbilled(entries)
+    entries.reject(&:is_billed)
+  end
+
+  def summed(entries)
+    entries.sum { |entry| entry.hours.to_f }
+  end
+
   def hours_output_file
     File.expand_path('../.hours', __FILE__)
   end
 
   def semimonthly_hours!(user_id = @config[:user_id])
     entries = report! user_id, *current_semimonthly_period
-    File.open(hours_output_file, 'w+') { |file|
-      file.write(entries.map { |entry| entry.hours.to_f }.sum)
-    }
+    write_output! summed(entries)
+  end
+
+  def uninvoiced_hours!(user_id = @config[:user_id])
+    entries = report! user_id, Time.now - 1.year, Time.now
+    write_output! round_up_to_nearest_quarter_hour(summed(unbilled(entries)))
+  end
+
+  def round_up_to_nearest_quarter_hour(hours)
+    (hours * 4).ceil / 4.0
   end
 
   def harvest
@@ -49,6 +64,14 @@ class TickTock
     @config.update YAML::load(File.read(config))
   end
 
+  def write_output!(hours)
+    File.open(hours_output_file, 'w+') { |file| file.write hours }
+  end
+
 end
 
-TickTock.new.semimonthly_hours!
+if ENV['UNINVOICED']
+  TickTock.new.uninvoiced_hours!
+elsif ENV['SEMIMONTHLY']
+  TickTock.new.semimonthly_hours!
+end
