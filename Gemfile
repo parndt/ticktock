@@ -1,3 +1,4 @@
-source :rubygems
+source 'https://rubygems.org'
+
 gem 'harvested'
 gem 'activesupport'
