@@ -65,4 +65,4 @@ Or for semi-monthly support:
 
 So, every 30 minutes I get an update on my terminal like magic.
 This relies on you having run `bundle install` inside your default
-Ruby (in my case using rvm) so that all the required gems are available.
+Ruby (in my case using chruby) so that all the required gems are available.
