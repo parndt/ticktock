@@ -2,3 +2,5 @@ subdomain: mysubdomain
 username: email@example.com
 password: password
 user_id: your_user_id
+home_currency: NZD
+bad_project_ids: nil

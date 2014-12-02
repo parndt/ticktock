@@ -1,3 +1,4 @@
 config/authentication.yml
 .hours
 Gemfile.lock
+.bundle
