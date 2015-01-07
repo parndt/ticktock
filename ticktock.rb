@@ -45,7 +45,7 @@ class TickTock
   end
 
   def uninvoiced_entries(user_id: @config[:user_id])
-    entries = report! Time.now - 1.year, Time.now, user_id: user_id
+    entries = report! Time.now - 3.months, Time.now, user_id: user_id
     entries = round_entries_up_to_nearest_half_hour(unbilled(entries))
     entries
   end
@@ -118,9 +118,9 @@ class TickTock
   end
 
   def harvest
-    @harvest ||= Harvest.client config[:subdomain],
-                                config[:username],
-                                config[:password]
+    @harvest ||= Harvest.client subdomain: config[:subdomain],
+                                username: config[:username],
+                                password: config[:password]
   end
 
   def current_semimonthly_period
@@ -140,7 +140,7 @@ class TickTock
   end
 
   def write_output!(hours)
-    File.open(hours_output_file, 'w+') { |file| file.write hours }
+    File.open(hours_output_file, 'w+') { |file| file.write(hours); file.write("\n") }
   end
 
 end
