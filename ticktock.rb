@@ -16,7 +16,14 @@ class TickTock
   end
 
   def report!(from, to, user_id: @config[:user_id])
-    harvest.reports.time_by_user user_id, from, to
+    harvest.reports.time_by_user(user_id, from, to) +
+      uninvoiced_expenses!(from, to, user_id: user_id)
+  end
+
+  def uninvoiced_expenses!(from, to, user_id: @config[:user_id])
+    harvest.reports.expenses_by_user(user_id, from, to).reject { |expense|
+      expense[:invoice_id].present? && expense[:invoice_id] != 0
+    }
   end
 
   def unbilled(entries)
@@ -76,7 +83,7 @@ class TickTock
 
   def group_entry_values_by_currency(entries)
     entries.inject({}) do |hash, entry|
-      income_data_point = entry.hours * entry.project.hourly_rate.to_f
+      income_data_point = entry.total_cost || (entry.hours * entry.project.hourly_rate.to_f)
       (hash[entry.client.currency.split(' ').last] ||= []) << income_data_point
       hash
     end
